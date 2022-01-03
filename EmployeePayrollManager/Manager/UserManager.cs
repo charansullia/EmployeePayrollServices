@@ -19,11 +19,26 @@ namespace EmployeePayrollManager.Manager
         {
             try
             {
+                register.Password = EncodePassword(register.Password);
                 return await this.repository.Register(register);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+        public static string EncodePassword(string Password)
+        {
+            try
+            {
+                byte[] encData_byte = new byte[Password.Length];
+                encData_byte = System.Text.Encoding.UTF8.GetBytes(Password);
+                string encodedData = Convert.ToBase64String(encData_byte);
+                return encodedData;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("error in Base64Encode" + ex.Message);
             }
         }
     }
