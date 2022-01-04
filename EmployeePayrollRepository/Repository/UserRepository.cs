@@ -29,12 +29,9 @@ namespace EmployeePayrollRepository.Repository
                 var ValidEmail =await this.context.Users.Where(x => x.Email == register.Email).SingleOrDefaultAsync();
                 if (ValidEmail == null)
                 {
-                    if (register != null)
-                    {
-                        register.Password = EncodePassword(register.Password);
-                        this.context.Users.Add(register);
-                        await this.context.SaveChangesAsync();
-                    }
+                    register.Password = EncodePassword(register.Password);
+                    this.context.Users.Add(register);
+                    await this.context.SaveChangesAsync();
                     return ValidEmail;
                 }
                 return null;
@@ -69,6 +66,26 @@ namespace EmployeePayrollRepository.Repository
                 var ValidPassword = this.context.Users.Where(x => x.Password == logindata.Password).SingleOrDefault();
                 if(ValidEmail != null && ValidPassword !=null)
                 {
+                    return true;
+                }
+                return false;
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool>ResetPassword(ResetModel reset)
+        {
+            try
+            {
+                var Email = await this.context.Users.Where(x => x.Email == reset.Email).SingleOrDefaultAsync();
+                if (Email != null)
+                {
+                    Email.Password = EncodePassword(reset.Password);
+                    this.context.Update(Email);
+                    await this.context.SaveChangesAsync();
                     return true;
                 }
                 return false;

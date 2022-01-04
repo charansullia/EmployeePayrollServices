@@ -60,5 +60,28 @@ namespace EmployeePayrollService.Controller
             }
 
         }
+
+        [HttpPut]
+        [Route("api/reset")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetModel reset)
+        {
+            try
+            {
+                var result =await this.manager.ResetPassword(reset);
+                if (result == true)
+                {
+                    return this.Ok(new ResponseModel<ResetModel>() { Status = true, Message = "Password Successfully Changed", });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Password not changed" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+
+        }
     }
 }

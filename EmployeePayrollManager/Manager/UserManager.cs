@@ -57,5 +57,18 @@ namespace EmployeePayrollManager.Manager
             }
         }
 
+        public async Task<bool> ResetPassword(ResetModel reset)
+        {
+            try
+            {
+                reset.Password = EncodePassword(reset.Password);
+                return await this.repository.ResetPassword(reset);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

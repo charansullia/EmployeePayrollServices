@@ -10,5 +10,6 @@ namespace EmployeePayrollRepository.Interface
     {
         Task<RegisterModel> Register(RegisterModel register);
         bool Login(LoginModel logindata);
+        Task<bool> ResetPassword(ResetModel reset);
     }
 }
