@@ -8,6 +8,7 @@ namespace EmployeePayrollRepository.Interface
 {
   public interface IUserRepository
     {
-        Task<string> Register(RegisterModel register);
+        Task<RegisterModel> Register(RegisterModel register);
+        bool Login(LoginModel logindata);
     }
 }

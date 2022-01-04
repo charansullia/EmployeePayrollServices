@@ -15,7 +15,8 @@ namespace EmployeePayrollManager.Manager
         {
             this.repository = repository;
         }
-        public async Task<string> Register(RegisterModel register)
+
+        public async Task<RegisterModel> Register(RegisterModel register)
         {
             try
             {
@@ -27,6 +28,7 @@ namespace EmployeePayrollManager.Manager
                 throw new Exception(ex.Message);
             }
         }
+
         public static string EncodePassword(string Password)
         {
             try
@@ -41,5 +43,19 @@ namespace EmployeePayrollManager.Manager
                 throw new Exception("error in Base64Encode" + ex.Message);
             }
         }
+
+        public bool Login(LoginModel logindata)
+        {
+            try
+            {
+                logindata.Password = EncodePassword(logindata.Password);
+                return this.repository.Login(logindata);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

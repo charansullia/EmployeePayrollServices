@@ -1,6 +1,7 @@
 ﻿using EmployeePayrollModel;
 using EmployeePayrollRepository.Context;
 using EmployeePayrollRepository.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -10,34 +11,40 @@ using System.Threading.Tasks;
 
 namespace EmployeePayrollRepository.Repository
 {
-  public class UserRepository:IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly UserContext context;
         private readonly IConfiguration configuration;
+
         public UserRepository(UserContext context, IConfiguration configuration)
         {
             this.context = context;
             this.configuration = configuration;
         }
-        public async Task<string> Register(RegisterModel register)
+
+        public async Task<RegisterModel> Register(RegisterModel register)
         {
             try
             {
-                var Data = this.context.Users.Where(x => x.Email == register.Email).SingleOrDefault();
-                if (Data == null)
+                var ValidEmail =await this.context.Users.Where(x => x.Email == register.Email).SingleOrDefaultAsync();
+                if (ValidEmail == null)
                 {
-                    register.Password = EncodePassword(register.Password);
-                    this.context.Users.Add(register);
-                    await this.context.SaveChangesAsync();
-                    return "RegistrationSuccessfull";
+                    if (register != null)
+                    {
+                        register.Password = EncodePassword(register.Password);
+                        this.context.Users.Add(register);
+                        await this.context.SaveChangesAsync();
+                    }
+                    return ValidEmail;
                 }
-                return "RegistrationUnSuccessfull";
+                return null;
             }
             catch (ArgumentNullException ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
         public static string EncodePassword(string Password)
         {
             try
@@ -52,5 +59,26 @@ namespace EmployeePayrollRepository.Repository
                 throw new Exception("error in Base64Encode" + ex.Message);
             }
         }
+
+        public bool Login(LoginModel logindata)
+        {
+            try
+            { 
+                var ValidEmail= this.context.Users.Where(x => x.Email ==logindata.Email).SingleOrDefault();
+                logindata.Password = EncodePassword(logindata.Password);
+                var ValidPassword = this.context.Users.Where(x => x.Password == logindata.Password).SingleOrDefault();
+                if(ValidEmail != null && ValidPassword !=null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
+
+

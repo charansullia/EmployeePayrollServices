@@ -15,16 +15,17 @@ namespace EmployeePayrollService.Controller
         {
             this.manager = manager;
         }
+
         [HttpPost]
         [Route("api/register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel register)
         {
             try
             {
-                string message = await this.manager.Register(register);
-                if (message == "RegistrationSuccessfull")
+                var result = await this.manager.Register(register);
+                if (result == null)
                 {
-                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "RegistrationSuccessfull" });
+                    return this.Ok(new ResponseModel<RegisterModel>() { Status = true, Message = "RegisterSuccessfull",Data=result });
                 }
                 else
                 {
@@ -36,5 +37,28 @@ namespace EmployeePayrollService.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+
+        [HttpPut]
+        [Route("api/login")]
+        public IActionResult Login([FromBody] LoginModel logindata)
+        {
+            try
+            {
+                var result = this.manager.Login(logindata);
+                if (result == true)
+                {
+                    return this.Ok(new ResponseModel<LoginModel>() { Status = true, Message = "Login Successfull",});
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Login UnSuccessfull" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
     }
 }

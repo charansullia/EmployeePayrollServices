@@ -8,6 +8,7 @@ namespace EmployeePayrollManager.Interface
 {
    public interface IUserManager
     {
-        Task<string> Register(RegisterModel register);
+        Task<RegisterModel> Register(RegisterModel register);
+        bool Login(LoginModel logindata);
     }
 }

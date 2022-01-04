@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeePayrollRepository.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20220102173301_PayrollService")]
+    [Migration("20220104154633_PayrollService")]
     partial class PayrollService
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
