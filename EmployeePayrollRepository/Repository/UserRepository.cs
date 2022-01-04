@@ -78,6 +78,7 @@ namespace EmployeePayrollRepository.Repository
                 throw new Exception(ex.Message);
             }
         }
+
     }
 }
 

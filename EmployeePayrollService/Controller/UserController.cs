@@ -58,7 +58,7 @@ namespace EmployeePayrollService.Controller
             {
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
-        }
 
+        }
     }
 }
