@@ -40,11 +40,11 @@ namespace EmployeePayrollService.Controller
 
         [HttpPut]
         [Route("api/login")]
-        public IActionResult Login([FromBody] LoginModel logindata)
+        public async Task<IActionResult> Login([FromBody] LoginModel logindata)
         {
             try
             {
-                var result = this.manager.Login(logindata);
+                var result =await this.manager.Login(logindata);
                 if (result == true)
                 {
                     return this.Ok(new ResponseModel<LoginModel>() { Status = true, Message = "Login Successfull",});
@@ -75,6 +75,30 @@ namespace EmployeePayrollService.Controller
                 {
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Password not changed" });
                 }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        [Route("api/forgetPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgetModel forget)
+        {
+            try
+            {
+                var result = await this.manager.ForgotPassword(forget);
+                if (result == true)
+                {
+                    return this.Ok(new ResponseModel<ForgetModel>() { Status = true, Message = " Password Link Send Sucessfully" });
+
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Password Link send Unsuccessfully " });
+                }
+
             }
             catch (Exception ex)
             {

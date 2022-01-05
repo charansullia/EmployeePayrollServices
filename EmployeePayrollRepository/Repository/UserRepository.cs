@@ -1,11 +1,13 @@
 ﻿using EmployeePayrollModel;
 using EmployeePayrollRepository.Context;
 using EmployeePayrollRepository.Interface;
+using Experimental.System.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,11 +59,11 @@ namespace EmployeePayrollRepository.Repository
             }
         }
 
-        public bool Login(LoginModel logindata)
+        public async Task<bool> Login(LoginModel logindata)
         {
             try
             { 
-                var ValidEmail= this.context.Users.Where(x => x.Email ==logindata.Email).SingleOrDefault();
+                var ValidEmail=await this.context.Users.Where(x => x.Email ==logindata.Email).SingleOrDefaultAsync();
                 logindata.Password = EncodePassword(logindata.Password);
                 var ValidPassword = this.context.Users.Where(x => x.Password == logindata.Password).SingleOrDefault();
                 if(ValidEmail != null && ValidPassword !=null)
@@ -94,6 +96,58 @@ namespace EmployeePayrollRepository.Repository
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<bool> ForgotPassword(ForgetModel forget)
+        {
+            try
+            {
+                var ExistingEmail =await this.context.Users.Where(x => x.Email == forget.Email).SingleOrDefaultAsync();
+                if (ExistingEmail != null)
+                {
+                    MailMessage mail = new MailMessage();
+                    SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+
+                    mail.From = new MailAddress(this.configuration["Credentials:Email"]);
+                    mail.To.Add(forget.Email);
+                    SendMSMQ();
+                    mail.Body = RecieveMSMQ();
+                    SmtpServer.Port = 587;
+                    SmtpServer.Credentials = new System.Net.NetworkCredential(this.configuration["Credentials:Email"], this.configuration["Credentials:Password"]);
+                    SmtpServer.EnableSsl = true;
+                    SmtpServer.Send(mail);
+                    return true;
+                }
+                return false;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void SendMSMQ()
+        {
+            MessageQueue msgqueue;
+            if (MessageQueue.Exists(@".\Private$\Fundoo"))
+            {
+                msgqueue = new MessageQueue(@".\Private$\Fundoo");
+            }
+            else
+            {
+                msgqueue = MessageQueue.Create(@".\Private$\Fundoo");
+            }
+            string body = "This is Password reset link.";
+            msgqueue.Label = "Mail Body";
+            msgqueue.Send(body);
+        }
+
+        public string RecieveMSMQ()
+        {
+            MessageQueue Messagequeue = new MessageQueue(@".\Private$\Fundoo");
+            var recievemsg = Messagequeue.Receive();
+            recievemsg.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
+            return recievemsg.Body.ToString();
         }
 
     }

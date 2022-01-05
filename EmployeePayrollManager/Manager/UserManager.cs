@@ -44,12 +44,12 @@ namespace EmployeePayrollManager.Manager
             }
         }
 
-        public bool Login(LoginModel logindata)
+        public async Task<bool> Login(LoginModel logindata)
         {
             try
             {
                 logindata.Password = EncodePassword(logindata.Password);
-                return this.repository.Login(logindata);
+                return await this.repository.Login(logindata);
             }
             catch (Exception ex)
             {
@@ -63,6 +63,18 @@ namespace EmployeePayrollManager.Manager
             {
                 reset.Password = EncodePassword(reset.Password);
                 return await this.repository.ResetPassword(reset);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> ForgotPassword(ForgetModel forget)
+        {
+            try
+            {
+                return await this.repository.ForgotPassword(forget);
             }
             catch (Exception ex)
             {

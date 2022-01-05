@@ -9,7 +9,8 @@ namespace EmployeePayrollManager.Interface
    public interface IUserManager
     {
         Task<RegisterModel> Register(RegisterModel register);
-        bool Login(LoginModel logindata);
+        Task<bool> Login(LoginModel logindata);
         Task<bool> ResetPassword(ResetModel reset);
+        Task<bool> ForgotPassword(ForgetModel forget);
     }
 }
