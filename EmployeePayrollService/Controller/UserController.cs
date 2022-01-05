@@ -23,9 +23,9 @@ namespace EmployeePayrollService.Controller
             try
             {
                 var result = await this.manager.Register(register);
-                if (result == null)
+                if (result != null)
                 {
-                    return this.Ok(new ResponseModel<RegisterModel>() { Status = true, Message = "RegisterSuccessfull",Data=result });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "RegisterSuccessfull",Data=result.ToString() });
                 }
                 else
                 {
@@ -45,9 +45,9 @@ namespace EmployeePayrollService.Controller
             try
             {
                 var result =await this.manager.Login(logindata);
-                if (result == true)
+                if (result ==true)
                 {
-                    return this.Ok(new ResponseModel<LoginModel>() { Status = true, Message = "Login Successfull",});
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Login Successfull",Data=result.ToString()});
                 }
                 else
                 {
@@ -69,7 +69,7 @@ namespace EmployeePayrollService.Controller
                 var result =await this.manager.ResetPassword(reset);
                 if (result == true)
                 {
-                    return this.Ok(new ResponseModel<ResetModel>() { Status = true, Message = "Password Successfully Changed", });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Password Successfully Changed",Data=result.ToString() });
                 }
                 else
                 {
@@ -91,7 +91,7 @@ namespace EmployeePayrollService.Controller
                 var result = await this.manager.ForgotPassword(forget);
                 if (result == true)
                 {
-                    return this.Ok(new ResponseModel<ForgetModel>() { Status = true, Message = " Password Link Send Sucessfully" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = " Password Link Send Sucessfully",Data=result.ToString()});
 
                 }
                 else
