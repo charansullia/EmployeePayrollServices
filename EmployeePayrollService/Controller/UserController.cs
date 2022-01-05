@@ -47,11 +47,12 @@ namespace EmployeePayrollService.Controller
                 var result =await this.manager.Login(logindata);
                 if (result ==true)
                 {
-                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Login Successfull",Data=result.ToString()});
+                    string tokenString = this.manager.TokenGeneration(logindata.Email);
+                    return this.Ok(new{ Status = true, Message = "Login Successfull", Token = tokenString });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Login UnSuccessfull" });
+                    return this.BadRequest(new ResponseModel<string>(){ Status = false, Message = "Login UnSuccessfull" });
                 }
             }
             catch (Exception ex)

@@ -12,5 +12,6 @@ namespace EmployeePayrollRepository.Interface
         Task<bool>Login(LoginModel logindata);
         Task<bool> ResetPassword(ResetModel reset);
         Task<bool> ForgotPassword(ForgetModel forget);
+        string TokenGeneration(string Email);
     }
 }

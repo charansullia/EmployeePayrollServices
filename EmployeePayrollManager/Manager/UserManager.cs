@@ -82,5 +82,17 @@ namespace EmployeePayrollManager.Manager
             }
         }
 
+        public string TokenGeneration(string Email)
+        {
+            try
+            {
+                return this.repository.TokenGeneration(Email);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }
