@@ -1,6 +1,7 @@
 ﻿using EmployeePayrollManager.Interface;
 using EmployeePayrollModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,11 @@ namespace EmployeePayrollService.Controller
     public class UserController : ControllerBase
     {
         private readonly IUserManager manager;
-        public UserController(IUserManager manager)
+        private readonly ILogger<UserController> logger;
+        public UserController(IUserManager manager, ILogger<UserController> logger)
         {
             this.manager = manager;
+            this.logger = logger;
         }
 
         [HttpPost]
@@ -23,18 +26,22 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
+                this.logger.LogInformation(register.FirstName + " " + register.LastName + " is trying to Register");
                 var result = await this.manager.Register(register);
                 if (result != null)
                 {
+                    this.logger.LogInformation(register.FirstName + " " + register.LastName + result);
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "RegisterSuccessfull",Data=result.ToString() });
                 }
                 else
                 {
+                    this.logger.LogInformation(register.FirstName + " " + register.LastName + result);
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "RegistrationUnSuccessful" });
                 }
             }
             catch (Exception ex)
             {
+                this.logger.LogInformation("Exception occured while using register " + ex.Message);
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -45,9 +52,11 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
+                this.logger.LogInformation(logindata.Email + " " + logindata.Password + " is trying to Login");
                 var result =await this.manager.Login(logindata);
                 if (result ==true)
                 {
+                    this.logger.LogInformation(logindata.Email + " " + logindata.Password + result);
                     ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
                     IDatabase database = connectionMultiplexer.GetDatabase();
                     string FirstName = database.StringGet("First Name");
@@ -67,11 +76,13 @@ namespace EmployeePayrollService.Controller
                 }
                 else
                 {
+                    this.logger.LogInformation(logindata.Email + " " + logindata.Password + result);
                     return this.BadRequest(new ResponseModel<string>(){ Status = false, Message = "Login UnSuccessfull" });
                 }
             }
             catch (Exception ex)
             {
+                this.logger.LogInformation("Exception occured while using Logging " + ex.Message);
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -82,18 +93,22 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
+                this.logger.LogInformation(reset.Email + " " + reset.Password + " is trying to ResetPassword");
                 var result =await this.manager.ResetPassword(reset);
                 if (result == true)
                 {
+                    this.logger.LogInformation(reset.Email + " " + reset.Password + result);
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Password Successfully Changed",Data=result.ToString() });
                 }
                 else
                 {
+                    this.logger.LogInformation(reset.Email + " " + reset.Password + result);
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Password not changed" });
                 }
             }
             catch (Exception ex)
             {
+                this.logger.LogInformation("Exception occured while using ResetPassword " + ex.Message);
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -104,20 +119,24 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
+                this.logger.LogInformation(forget.Email  + " is trying to ForgetPassword");
                 var result = await this.manager.ForgotPassword(forget);
                 if (result == true)
                 {
+                    this.logger.LogInformation(forget.Email  + result);
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = " Password Link Send Sucessfully",Data=result.ToString()});
 
                 }
                 else
                 {
+                    this.logger.LogInformation(forget.Email + result);
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Password Link send Unsuccessfully " });
                 }
 
             }
             catch (Exception ex)
             {
+                this.logger.LogInformation("Exception occured while using ForgetPassword " + ex.Message);
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
