@@ -5,6 +5,7 @@ using Experimental.System.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -71,6 +72,13 @@ namespace EmployeePayrollRepository.Repository
                 var ValidPassword = await this.context.Users.Where(x => x.Password == logindata.Password).SingleOrDefaultAsync();
                 if (ValidEmail != null)
                 {
+                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+                    IDatabase database = connectionMultiplexer.GetDatabase();
+                    database.StringSet(key: "First Name", ValidEmail.FirstName);
+                    database.StringSet(key: "Last Name", ValidEmail.LastName);
+                    database.StringSet(key: "Email", ValidEmail.Email);
+                    database.StringSet(key: "UserId", ValidEmail.UserId.ToString());
+                    //return user != null ? "Login Successful" : "Login failed!! Email or password wrong";
                     return true;
                 }
                 return false;

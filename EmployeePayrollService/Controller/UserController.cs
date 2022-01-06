@@ -1,6 +1,7 @@
 ﻿using EmployeePayrollManager.Interface;
 using EmployeePayrollModel;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,8 +48,22 @@ namespace EmployeePayrollService.Controller
                 var result =await this.manager.Login(logindata);
                 if (result ==true)
                 {
+                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+                    IDatabase database = connectionMultiplexer.GetDatabase();
+                    string FirstName = database.StringGet("First Name");
+                    string LastName = database.StringGet("Last Name");
+                    string Email = database.StringGet("Email");
+                    int UserId = Convert.ToInt32(database.StringGet("UserId"));
+
+                    RegisterModel data = new RegisterModel
+                    {
+                        FirstName = FirstName,
+                        LastName = LastName,
+                        UserId = UserId,
+                        Email = Email
+                    };
                     string tokenString = this.manager.TokenGeneration(logindata.Email);
-                    return this.Ok(new{ Status = true, Message = "Login Successfull", Token = tokenString });
+                    return this.Ok(new{ Status = true, Message = "Login Successfull", Token = tokenString,Data=data });
                 }
                 else
                 {
