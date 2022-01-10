@@ -13,5 +13,6 @@ namespace EmployeePayrollRepository.Context
 
         }
         public DbSet<RegisterModel> Users { get; set; }
+        public DbSet<EmployeeModel> Emp { get; set; }
     }
 }

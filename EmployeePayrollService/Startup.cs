@@ -37,6 +37,8 @@ namespace EmployeePayrollService
                         options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+            services.AddTransient<IEmployeeManager, EmployeeManager>();
             // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddSession();
             services.AddCors(options => options.AddPolicy(name: "CorsPolicyAllHosts", builder =>

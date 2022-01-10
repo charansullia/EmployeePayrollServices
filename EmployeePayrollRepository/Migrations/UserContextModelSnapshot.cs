@@ -18,6 +18,41 @@ namespace EmployeePayrollRepository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("EmployeePayrollModel.EmployeeModel", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("DEPARTMENT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GENDER")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NAME")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PROFILE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SALARY")
+                        .HasColumnType("int");
+
+                    b.Property<int>("STARTDATE")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Emp");
+                });
+
             modelBuilder.Entity("EmployeePayrollModel.RegisterModel", b =>
                 {
                     b.Property<int>("UserId")
@@ -42,6 +77,15 @@ namespace EmployeePayrollRepository.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EmployeePayrollModel.EmployeeModel", b =>
+                {
+                    b.HasOne("EmployeePayrollModel.RegisterModel", "user")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

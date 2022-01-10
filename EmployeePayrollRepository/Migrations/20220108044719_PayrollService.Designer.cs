@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeePayrollRepository.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20220104154633_PayrollService")]
+    [Migration("20220108044719_PayrollService")]
     partial class PayrollService
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,6 +19,41 @@ namespace EmployeePayrollRepository.Migrations
                 .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("EmployeePayrollModel.EmployeeModel", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("DEPARTMENT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GENDER")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NAME")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PROFILE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SALARY")
+                        .HasColumnType("int");
+
+                    b.Property<int>("STARTDATE")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Emp");
+                });
 
             modelBuilder.Entity("EmployeePayrollModel.RegisterModel", b =>
                 {
@@ -44,6 +79,15 @@ namespace EmployeePayrollRepository.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EmployeePayrollModel.EmployeeModel", b =>
+                {
+                    b.HasOne("EmployeePayrollModel.RegisterModel", "user")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
