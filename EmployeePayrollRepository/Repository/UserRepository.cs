@@ -67,9 +67,8 @@ namespace EmployeePayrollRepository.Repository
         {
             try
             {
-                var ValidEmail = await this.context.Users.Where(x => x.Email == logindata.Email).SingleOrDefaultAsync();
                 logindata.Password = EncodePassword(logindata.Password);
-                var ValidPassword = await this.context.Users.Where(x => x.Password == logindata.Password).SingleOrDefaultAsync();
+                var ValidEmail = await this.context.Users.Where(x => x.Email == logindata.Email & x.Password==logindata.Password).SingleOrDefaultAsync();
                 if (ValidEmail != null)
                 {
                     ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
@@ -78,7 +77,6 @@ namespace EmployeePayrollRepository.Repository
                     database.StringSet(key: "Last Name", ValidEmail.LastName);
                     database.StringSet(key: "Email", ValidEmail.Email);
                     database.StringSet(key: "UserId", ValidEmail.UserId.ToString());
-                    //return user != null ? "Login Successful" : "Login failed!! Email or password wrong";
                     return true;
                 }
                 return false;
