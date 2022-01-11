@@ -31,12 +31,12 @@ namespace EmployeePayrollService.Controller
                 if (result != null)
                 {
                     this.logger.LogInformation(register.FirstName + " " + register.LastName + result);
-                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "RegisterSuccessfull",Data=result.ToString() });
+                    return this.Ok(new { Status = true, Message = "RegisterSuccessfull",Data=result });
                 }
                 else
                 {
                     this.logger.LogInformation(register.FirstName + " " + register.LastName + result);
-                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "RegistrationUnSuccessful" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "RegistrationUnSuccessful"});
                 }
             }
             catch (Exception ex)
@@ -98,7 +98,7 @@ namespace EmployeePayrollService.Controller
                 if (result == true)
                 {
                     this.logger.LogInformation(reset.Email + " " + reset.Password + result);
-                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Password Successfully Changed",Data=result.ToString() });
+                    return this.Ok(new { Status = true, Message = "Password Successfully Changed",Data=result });
                 }
                 else
                 {
@@ -124,8 +124,7 @@ namespace EmployeePayrollService.Controller
                 if (result == true)
                 {
                     this.logger.LogInformation(forget.Email  + result);
-                    return this.Ok(new ResponseModel<string>() { Status = true, Message = " Password Link Send Sucessfully",Data=result.ToString()});
-
+                    return this.Ok(new { Status = true, Message = " Password Link Send Sucessfully",Data=result});
                 }
                 else
                 {
