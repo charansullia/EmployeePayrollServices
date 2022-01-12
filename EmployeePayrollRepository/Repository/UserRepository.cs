@@ -32,7 +32,7 @@ namespace EmployeePayrollRepository.Repository
         {
             try
             {
-                var ValidEmail =await this.context.Users.Where(x => x.Email == register.Email).SingleOrDefaultAsync();
+                var ValidEmail = await this.context.Users.Where(x => x.Email == register.Email).SingleOrDefaultAsync();
                 if (ValidEmail == null)
                 {
                     register.Password = EncodePassword(register.Password);
@@ -68,28 +68,30 @@ namespace EmployeePayrollRepository.Repository
             try
             {
                 var ValidEmail = await this.context.Users.Where(x => x.Email == logindata.Email).SingleOrDefaultAsync();
-                logindata.Password = EncodePassword(logindata.Password);
-                var ValidPassword = await this.context.Users.Where(x => x.Password == logindata.Password).SingleOrDefaultAsync();
                 if (ValidEmail != null)
                 {
-                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
-                    IDatabase database = connectionMultiplexer.GetDatabase();
-                    database.StringSet(key: "First Name", ValidEmail.FirstName);
-                    database.StringSet(key: "Last Name", ValidEmail.LastName);
-                    database.StringSet(key: "Email", ValidEmail.Email);
-                    database.StringSet(key: "UserId", ValidEmail.UserId.ToString());
-                    //return user != null ? "Login Successful" : "Login failed!! Email or password wrong";
-                    return true;
+                    var ValidPassword = await this.context.Users.Where(x => x.Password == EncodePassword(logindata.Password)).SingleOrDefaultAsync();
+                    if (ValidPassword != null)
+                    {
+                        ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(this.configuration["Connections:Connection"]);
+                        IDatabase database = connectionMultiplexer.GetDatabase();
+                        database.StringSet(key: "First Name", ValidEmail.FirstName);
+                        database.StringSet(key: "Last Name", ValidEmail.LastName);
+                        database.StringSet(key: "Email", ValidEmail.Email);
+                        database.StringSet(key: "UserId", ValidEmail.UserId.ToString());
+                        return true;
+                    }
+                    return false;
                 }
                 return false;
             }
-            catch(ArgumentNullException ex)
+            catch (ArgumentNullException ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        public async Task<bool>ResetPassword(ResetModel reset)
+        public async Task<bool> ResetPassword(ResetModel reset)
         {
             try
             {
@@ -103,24 +105,24 @@ namespace EmployeePayrollRepository.Repository
                 }
                 return false;
             }
-            catch(ArgumentNullException ex)
+            catch (ArgumentNullException ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        public async Task<bool> ForgotPassword(ForgetModel forget)
+        public async Task<bool> ForgotPassword(string Email)
         {
             try
             {
-                var ExistingEmail =await this.context.Users.Where(x => x.Email == forget.Email).SingleOrDefaultAsync();
+                var ExistingEmail = await this.context.Users.Where(x => x.Email == Email).SingleOrDefaultAsync();
                 if (ExistingEmail != null)
                 {
                     MailMessage mail = new MailMessage();
                     SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
 
                     mail.From = new MailAddress(this.configuration["Credentials:Email"]);
-                    mail.To.Add(forget.Email);
+                    mail.To.Add(Email);
                     SendMSMQ();
                     mail.Body = RecieveMSMQ();
                     SmtpServer.Port = 587;
@@ -140,13 +142,13 @@ namespace EmployeePayrollRepository.Repository
         public void SendMSMQ()
         {
             MessageQueue msgqueue;
-            if (MessageQueue.Exists(@".\Private$\Fundoo"))
+            if (MessageQueue.Exists(@".\Private$\EmpPayroll"))
             {
-                msgqueue = new MessageQueue(@".\Private$\Fundoo");
+                msgqueue = new MessageQueue(@".\Private$\EmpPayroll");
             }
             else
             {
-                msgqueue = MessageQueue.Create(@".\Private$\Fundoo");
+                msgqueue = MessageQueue.Create(@".\Private$\EmpPayroll");
             }
             string body = "This is Password reset link.";
             msgqueue.Label = "Mail Body";
@@ -155,7 +157,7 @@ namespace EmployeePayrollRepository.Repository
 
         public string RecieveMSMQ()
         {
-            MessageQueue Messagequeue = new MessageQueue(@".\Private$\Fundoo");
+            MessageQueue Messagequeue = new MessageQueue(@".\Private$\EmpPayroll");
             var recievemsg = Messagequeue.Receive();
             recievemsg.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
             return recievemsg.Body.ToString();
