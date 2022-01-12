@@ -67,17 +67,21 @@ namespace EmployeePayrollRepository.Repository
         {
             try
             {
-                logindata.Password = EncodePassword(logindata.Password);
-                var ValidEmail = await this.context.Users.Where(x => x.Email == logindata.Email & x.Password==logindata.Password).SingleOrDefaultAsync();
+                var ValidEmail = await this.context.Users.Where(x => x.Email == logindata.Email).SingleOrDefaultAsync();
                 if (ValidEmail != null)
                 {
-                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
-                    IDatabase database = connectionMultiplexer.GetDatabase();
-                    database.StringSet(key: "First Name", ValidEmail.FirstName);
-                    database.StringSet(key: "Last Name", ValidEmail.LastName);
-                    database.StringSet(key: "Email", ValidEmail.Email);
-                    database.StringSet(key: "UserId", ValidEmail.UserId.ToString());
-                    return true;
+                    var ValidPassword = await this.context.Users.Where(x => x.Password ==EncodePassword(logindata.Password)).SingleOrDefaultAsync();
+                    if (ValidPassword != null)
+                    {
+                        ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(this.configuration["Connections:Connection"]);
+                        IDatabase database = connectionMultiplexer.GetDatabase();
+                        database.StringSet(key: "First Name", ValidEmail.FirstName);
+                        database.StringSet(key: "Last Name", ValidEmail.LastName);
+                        database.StringSet(key: "Email", ValidEmail.Email);
+                        database.StringSet(key: "UserId", ValidEmail.UserId.ToString());
+                        return true;
+                    }
+                    return false;
                 }
                 return false;
             }
@@ -138,13 +142,13 @@ namespace EmployeePayrollRepository.Repository
         public void SendMSMQ()
         {
             MessageQueue msgqueue;
-            if (MessageQueue.Exists(@".\Private$\Fundoo"))
+            if (MessageQueue.Exists(@".\Private$\EmpPayroll"))
             {
-                msgqueue = new MessageQueue(@".\Private$\Fundoo");
+                msgqueue = new MessageQueue(@".\Private$\EmpPayroll");
             }
             else
             {
-                msgqueue = MessageQueue.Create(@".\Private$\Fundoo");
+                msgqueue = MessageQueue.Create(@".\Private$\EmpPayroll");
             }
             string body = "This is Password reset link.";
             msgqueue.Label = "Mail Body";
@@ -153,7 +157,7 @@ namespace EmployeePayrollRepository.Repository
 
         public string RecieveMSMQ()
         {
-            MessageQueue Messagequeue = new MessageQueue(@".\Private$\Fundoo");
+            MessageQueue Messagequeue = new MessageQueue(@".\Private$\EmpPayroll");
             var recievemsg = Messagequeue.Receive();
             recievemsg.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
             return recievemsg.Body.ToString();

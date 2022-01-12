@@ -25,11 +25,11 @@ namespace EmployeePayrollService.Controller
                 var result = await this.manager.AddEmployeeDetail(employeeModel);
                 if (result != null)
                 {
-                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "EmployeeDetail Added Sucessfully", Data = result.ToString() });
+                    return this.Ok(new { Status = true, Message = "EmployeeDetail Added Sucessfully", Data = result});
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "EmployeeDetail Added UnSucessfully" });
+                    return this.BadRequest(new { Status = false, Message = "EmployeeDetail Added UnSucessfully" });
                 }
             }
             catch (Exception ex)
