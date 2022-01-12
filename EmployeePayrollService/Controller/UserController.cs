@@ -1,6 +1,7 @@
 ﻿using EmployeePayrollManager.Interface;
 using EmployeePayrollModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using System;
@@ -13,11 +14,11 @@ namespace EmployeePayrollService.Controller
     public class UserController : ControllerBase
     {
         private readonly IUserManager manager;
-        private readonly ILogger<UserController> logger;
-        public UserController(IUserManager manager, ILogger<UserController> logger)
+        private readonly IConfiguration configuration;
+        public UserController(IUserManager manager,IConfiguration configuration)
         {
             this.manager = manager;
-            this.logger = logger;
+            this.configuration = configuration;
         }
 
         [HttpPost]
@@ -26,23 +27,19 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
-                this.logger.LogInformation(register.FirstName + " " + register.LastName + " is trying to Register");
                 var result = await this.manager.Register(register);
                 if (result != null)
                 {
-                    this.logger.LogInformation(register.FirstName + " " + register.LastName + result);
-                    return this.Ok(new { Status = true, Message = "RegisterSuccessfull",Data=result });
+                    return this.Ok(new { Status = true, message = "RegisterSuccessfull",Data=result });
                 }
                 else
                 {
-                    this.logger.LogInformation(register.FirstName + " " + register.LastName + result);
-                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "RegistrationUnSuccessful"});
+                    return this.BadRequest(new { Status = false, message = "RegistrationUnSuccessful"});
                 }
             }
             catch (Exception ex)
-            {
-                this.logger.LogInformation("Exception occured while using register " + ex.Message);
-                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            { 
+                return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
 
@@ -52,12 +49,10 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
-                this.logger.LogInformation(logindata.Email + " " + logindata.Password + " is trying to Login");
                 var result =await this.manager.Login(logindata);
                 if (result ==true)
                 {
-                    this.logger.LogInformation(logindata.Email + " " + logindata.Password + result);
-                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(this.configuration["Connections:Connection"]);
                     IDatabase database = connectionMultiplexer.GetDatabase();
                     string FirstName = database.StringGet("First Name");
                     string LastName = database.StringGet("Last Name");
@@ -71,19 +66,18 @@ namespace EmployeePayrollService.Controller
                         UserId = UserId,
                         Email = Email
                     };
-                    string tokenString = this.manager.TokenGeneration(logindata.Email);
+                    string tokenString  = this.manager.TokenGeneration(logindata.Email);
                     return this.Ok(new{ Status = true, Message = "Login Successfull", Token = tokenString,Data=data });
                 }
                 else
                 {
-                    this.logger.LogInformation(logindata.Email + " " + logindata.Password + result);
-                    return this.BadRequest(new ResponseModel<string>(){ Status = false, Message = "Login UnSuccessfull" });
+                    return this.BadRequest(new{ Status = false, message = "Login UnSuccessfull" });
+
                 }
             }
             catch (Exception ex)
             {
-                this.logger.LogInformation("Exception occured while using Logging " + ex.Message);
-                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+                return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
 
@@ -93,23 +87,19 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
-                this.logger.LogInformation(reset.Email + " " + reset.Password + " is trying to ResetPassword");
                 var result =await this.manager.ResetPassword(reset);
                 if (result == true)
                 {
-                    this.logger.LogInformation(reset.Email + " " + reset.Password + result);
-                    return this.Ok(new { Status = true, Message = "Password Successfully Changed",Data=result });
+                    return this.Ok(new { Status = true, message = "Password Successfully Changed",Data=result });
                 }
                 else
-                {
-                    this.logger.LogInformation(reset.Email + " " + reset.Password + result);
-                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Password not changed" });
+                { 
+                    return this.BadRequest(new{ Status = false, message = "Password not changed" });
                 }
             }
             catch (Exception ex)
             {
-                this.logger.LogInformation("Exception occured while using ResetPassword " + ex.Message);
-                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+                return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
 
@@ -119,24 +109,20 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
-                this.logger.LogInformation(forget.Email  + " is trying to ForgetPassword");
                 var result = await this.manager.ForgotPassword(forget);
                 if (result == true)
                 {
-                    this.logger.LogInformation(forget.Email  + result);
-                    return this.Ok(new { Status = true, Message = " Password Link Send Sucessfully",Data=result});
+                    return this.Ok(new { Status = true, message = " Password Link Send Sucessfully",Data=result});
                 }
                 else
                 {
-                    this.logger.LogInformation(forget.Email + result);
-                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Password Link send Unsuccessfully " });
+                    return this.BadRequest(new { Status = false, message = "Password Link send Unsuccessfully " });
                 }
 
             }
             catch (Exception ex)
             {
-                this.logger.LogInformation("Exception occured while using ForgetPassword " + ex.Message);
-                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+                return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
 
