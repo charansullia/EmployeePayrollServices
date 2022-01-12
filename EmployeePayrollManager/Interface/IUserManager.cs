@@ -11,7 +11,7 @@ namespace EmployeePayrollManager.Interface
         Task<RegisterModel> Register(RegisterModel register);
         Task<bool> Login(LoginModel logindata);
         Task<bool> ResetPassword(ResetModel reset);
-        Task<bool> ForgotPassword(ForgetModel forget);
+        Task<bool> ForgotPassword(string Email);
         string TokenGeneration(string Email);
     }
 }

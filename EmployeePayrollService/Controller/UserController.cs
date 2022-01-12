@@ -15,7 +15,7 @@ namespace EmployeePayrollService.Controller
     {
         private readonly IUserManager manager;
         private readonly IConfiguration configuration;
-        public UserController(IUserManager manager,IConfiguration configuration)
+        public UserController(IUserManager manager, IConfiguration configuration)
         {
             this.manager = manager;
             this.configuration = configuration;
@@ -30,15 +30,15 @@ namespace EmployeePayrollService.Controller
                 var result = await this.manager.Register(register);
                 if (result != null)
                 {
-                    return this.Ok(new { Status = true, message = "RegisterSuccessfull",Data=result });
+                    return this.Ok(new { Status = true, message = "RegisterSuccessfull", Data = result });
                 }
                 else
                 {
-                    return this.BadRequest(new { Status = false, message = "RegistrationUnSuccessful"});
+                    return this.BadRequest(new { Status = false, message = "RegistrationUnSuccessful" });
                 }
             }
             catch (Exception ex)
-            { 
+            {
                 return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
@@ -49,8 +49,8 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
-                var result =await this.manager.Login(logindata);
-                if (result ==true)
+                var result = await this.manager.Login(logindata);
+                if (result == true)
                 {
                     ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(this.configuration["Connections:Connection"]);
                     IDatabase database = connectionMultiplexer.GetDatabase();
@@ -66,12 +66,12 @@ namespace EmployeePayrollService.Controller
                         UserId = UserId,
                         Email = Email
                     };
-                    string tokenString  = this.manager.TokenGeneration(logindata.Email);
-                    return this.Ok(new{ Status = true, Message = "Login Successfull", Token = tokenString,Data=data });
+                    string tokenString = this.manager.TokenGeneration(logindata.Email);
+                    return this.Ok(new { Status = true, Message = "Login Successfull", Token = tokenString, Data = data });
                 }
                 else
                 {
-                    return this.BadRequest(new{ Status = false, message = "Login UnSuccessfull" });
+                    return this.BadRequest(new { Status = false, message = "Login UnSuccessfull" });
 
                 }
             }
@@ -87,14 +87,14 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
-                var result =await this.manager.ResetPassword(reset);
+                var result = await this.manager.ResetPassword(reset);
                 if (result == true)
                 {
-                    return this.Ok(new { Status = true, message = "Password Successfully Changed",Data=result });
+                    return this.Ok(new { Status = true, message = "Password Successfully Changed", Data = result });
                 }
                 else
-                { 
-                    return this.BadRequest(new{ Status = false, message = "Password not changed" });
+                {
+                    return this.BadRequest(new { Status = false, message = "Password not changed" });
                 }
             }
             catch (Exception ex)
@@ -105,14 +105,14 @@ namespace EmployeePayrollService.Controller
 
         [HttpPut]
         [Route("api/forgetPassword")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgetModel forget)
+        public async Task<IActionResult> ForgotPassword(string Email)
         {
             try
             {
-                var result = await this.manager.ForgotPassword(forget);
+                var result = await this.manager.ForgotPassword(Email);
                 if (result == true)
                 {
-                    return this.Ok(new { Status = true, message = " Password Link Send Sucessfully",Data=result});
+                    return this.Ok(new { Status = true, message = " Password Link Send Sucessfully", Data = result });
                 }
                 else
                 {
