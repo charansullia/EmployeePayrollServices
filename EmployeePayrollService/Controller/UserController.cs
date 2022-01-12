@@ -30,16 +30,16 @@ namespace EmployeePayrollService.Controller
                 var result = await this.manager.Register(register);
                 if (result != null)
                 {
-                    return this.Ok(new { Status = true, Message = "RegisterSuccessfull",Data=result });
+                    return this.Ok(new { Status = true, message = "RegisterSuccessfull",Data=result });
                 }
                 else
                 {
-                    return this.BadRequest(new { Status = false, Message = "RegistrationUnSuccessful"});
+                    return this.BadRequest(new { Status = false, message = "RegistrationUnSuccessful"});
                 }
             }
             catch (Exception ex)
             { 
-                return this.NotFound(new { Status = false, Message = ex.Message });
+                return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
 
@@ -71,12 +71,13 @@ namespace EmployeePayrollService.Controller
                 }
                 else
                 {
-                    return this.BadRequest(new{ Status = false, Message = "Login UnSuccessfull" });
+                    return this.BadRequest(new{ Status = false, message = "Login UnSuccessfull" });
+
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new { Status = false, Message = ex.Message });
+                return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
 
@@ -89,16 +90,16 @@ namespace EmployeePayrollService.Controller
                 var result =await this.manager.ResetPassword(reset);
                 if (result == true)
                 {
-                    return this.Ok(new { Status = true, Message = "Password Successfully Changed",Data=result });
+                    return this.Ok(new { Status = true, message = "Password Successfully Changed",Data=result });
                 }
                 else
                 { 
-                    return this.BadRequest(new{ Status = false, Message = "Password not changed" });
+                    return this.BadRequest(new{ Status = false, message = "Password not changed" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new { Status = false, Message = ex.Message });
+                return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
 
@@ -111,17 +112,17 @@ namespace EmployeePayrollService.Controller
                 var result = await this.manager.ForgotPassword(forget);
                 if (result == true)
                 {
-                    return this.Ok(new { Status = true, Message = " Password Link Send Sucessfully",Data=result});
+                    return this.Ok(new { Status = true, message = " Password Link Send Sucessfully",Data=result});
                 }
                 else
                 {
-                    return this.BadRequest(new { Status = false, Message = "Password Link send Unsuccessfully " });
+                    return this.BadRequest(new { Status = false, message = "Password Link send Unsuccessfully " });
                 }
 
             }
             catch (Exception ex)
             {
-                return this.NotFound(new { Status = false, Message = ex.Message });
+                return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
 
