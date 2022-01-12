@@ -32,7 +32,7 @@ namespace EmployeePayrollRepository.Repository
         {
             try
             {
-                var ValidEmail =await this.context.Users.Where(x => x.Email == register.Email).SingleOrDefaultAsync();
+                var ValidEmail = await this.context.Users.Where(x => x.Email == register.Email).SingleOrDefaultAsync();
                 if (ValidEmail == null)
                 {
                     register.Password = EncodePassword(register.Password);
@@ -70,7 +70,7 @@ namespace EmployeePayrollRepository.Repository
                 var ValidEmail = await this.context.Users.Where(x => x.Email == logindata.Email).SingleOrDefaultAsync();
                 if (ValidEmail != null)
                 {
-                    var ValidPassword = await this.context.Users.Where(x => x.Password ==EncodePassword(logindata.Password)).SingleOrDefaultAsync();
+                    var ValidPassword = await this.context.Users.Where(x => x.Password == EncodePassword(logindata.Password)).SingleOrDefaultAsync();
                     if (ValidPassword != null)
                     {
                         ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(this.configuration["Connections:Connection"]);
@@ -85,13 +85,13 @@ namespace EmployeePayrollRepository.Repository
                 }
                 return false;
             }
-            catch(ArgumentNullException ex)
+            catch (ArgumentNullException ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        public async Task<bool>ResetPassword(ResetModel reset)
+        public async Task<bool> ResetPassword(ResetModel reset)
         {
             try
             {
@@ -105,24 +105,24 @@ namespace EmployeePayrollRepository.Repository
                 }
                 return false;
             }
-            catch(ArgumentNullException ex)
+            catch (ArgumentNullException ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        public async Task<bool> ForgotPassword(ForgetModel forget)
+        public async Task<bool> ForgotPassword(string Email)
         {
             try
             {
-                var ExistingEmail =await this.context.Users.Where(x => x.Email == forget.Email).SingleOrDefaultAsync();
+                var ExistingEmail = await this.context.Users.Where(x => x.Email == Email).SingleOrDefaultAsync();
                 if (ExistingEmail != null)
                 {
                     MailMessage mail = new MailMessage();
                     SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
 
                     mail.From = new MailAddress(this.configuration["Credentials:Email"]);
-                    mail.To.Add(forget.Email);
+                    mail.To.Add(Email);
                     SendMSMQ();
                     mail.Body = RecieveMSMQ();
                     SmtpServer.Port = 587;

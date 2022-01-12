@@ -70,11 +70,11 @@ namespace EmployeePayrollManager.Manager
             }
         }
 
-        public async Task<bool> ForgotPassword(ForgetModel forget)
+        public async Task<bool> ForgotPassword(string Email)
         {
             try
             {
-                return await this.repository.ForgotPassword(forget);
+                return await this.repository.ForgotPassword(Email);
             }
             catch (Exception ex)
             {
