@@ -40,5 +40,28 @@ namespace EmployeePayrollManager.Manager
             }
         }
 
+        public IEnumerable<EmployeeModel> GetEmployeeDetail(int EmployeeId)
+        {
+            try
+            {
+                return this.empRepository.GetEmployeeDetail(EmployeeId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<EmployeeModel> DeleteEmployeeDetail(int EmployeeId)
+        {
+            try
+            {
+                return await this.empRepository.DeleteEmployeeDetail(EmployeeId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

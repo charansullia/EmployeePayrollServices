@@ -58,7 +58,51 @@ namespace EmployeePayrollService.Controller
             {
                 return this.NotFound(new { Status = false, ex.Message });
             }
-
         }
+
+        [HttpGet]
+        [Route("api/GetEmployeeDetail")]
+        public IActionResult GetEmployeeDetail(int EmployeeId)
+        {
+            try
+            {
+                IEnumerable<EmployeeModel> result = this.manager.GetEmployeeDetail(EmployeeId);
+                if (result != null)
+                {
+                    return this.Ok(new { Status = true, Message = "Get EmployeeDetails", Data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { Status = false, Message = "EmployeeDetails not Get", Data = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, ex.Message });
+            }
+        }
+
+        [HttpDelete]
+        [Route("api/DeleteEmployee")]
+        public async Task<IActionResult> DeleteEmployeeDetail(int EmployeeId)
+        {
+            try
+            {
+                var result = await this.manager.DeleteEmployeeDetail(EmployeeId);
+                if (result != null)
+                {
+                    return this.Ok(new { Status = true, Message = "EmployeeDetail Deleted Sucessfully", Data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { Status = false, Message = "EmployeeDetail Not Deleted" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, ex.Message });
+            }
+        }
+
     }
 }

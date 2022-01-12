@@ -10,5 +10,7 @@ namespace EmployeePayrollRepository.Interface
     {
         Task<EmployeeModel> AddEmployeeDetail(EmployeeModel employeemodel);
         Task<EmployeeModel> EditEmployeeDetail(EmployeeModel employeeModel);
+        IEnumerable<EmployeeModel> GetEmployeeDetail(int EmployeeId);
+        Task<EmployeeModel> DeleteEmployeeDetail(int EmployeeId);
     }
 }

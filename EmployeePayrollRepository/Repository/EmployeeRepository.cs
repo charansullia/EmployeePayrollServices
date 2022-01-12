@@ -57,6 +57,42 @@ namespace EmployeePayrollRepository.Repository
                 throw new Exception(ex.Message);
             }
         }
+         
+        public  IEnumerable <EmployeeModel>GetEmployeeDetail(int EmployeeId)
+        {
+            try
+            {
+                IEnumerable<EmployeeModel> EmployeeList = this.context.Emp.Where(x => x.EmployeeId == EmployeeId).ToList();
+                if (EmployeeList != null)
+                {
+                    return EmployeeList;
+                }
+                return null;
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<EmployeeModel>DeleteEmployeeDetail(int EmployeeId)
+        {
+            try
+            {
+                var EmpDetail = await this.context.Emp.Where(x => x.EmployeeId == EmployeeId).SingleOrDefaultAsync();
+                if (EmpDetail != null)
+                {
+                    this.context.Remove(EmpDetail);
+                    await this.context.SaveChangesAsync();
+                    return EmpDetail;
+                }
+                return null;
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
     }
 }
