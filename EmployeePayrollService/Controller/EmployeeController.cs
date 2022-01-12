@@ -38,5 +38,28 @@ namespace EmployeePayrollService.Controller
             }
 
         }
+
+        [HttpPut]
+        [Route("api/EditEmployee")]
+        public async Task<IActionResult> EditEmployeeDetail([FromBody] EmployeeModel employeeModel)
+        {
+            try
+            {
+                var result = await this.manager.EditEmployeeDetail(employeeModel);
+                if (result != null)
+                {
+                    return this.Ok(new { Status = true, Message = "EmployeeDetail Edited Sucessfully", Data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { Status = false, Message = "EmployeeDetail Edited UnSucessfully" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, ex.Message });
+            }
+
+        }
     }
 }

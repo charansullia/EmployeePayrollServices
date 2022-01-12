@@ -9,5 +9,6 @@ namespace EmployeePayrollManager.Interface
   public interface IEmployeeManager
     {
         Task<EmployeeModel> AddEmployeeDetail(EmployeeModel employeeModel);
+        Task<EmployeeModel> EditEmployeeDetail(EmployeeModel employeeModel);
     }
 }

@@ -28,5 +28,17 @@ namespace EmployeePayrollManager.Manager
             }
         }
 
+        public async Task<EmployeeModel> EditEmployeeDetail(EmployeeModel employeeModel)
+        {
+            try
+            {
+                return await this.empRepository.EditEmployeeDetail(employeeModel);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }
