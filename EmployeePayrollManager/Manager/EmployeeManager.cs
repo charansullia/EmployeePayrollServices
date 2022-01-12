@@ -16,11 +16,11 @@ namespace EmployeePayrollManager.Manager
             this.empRepository = empRepository;
         }
 
-        public async Task<EmployeeModel> AddEmployeeDetail(EmployeeModel employeeModel)
+        public async Task<EmployeeModel> AddEmployeeDetail(EmployeeModel employeemodel)
         {
             try
             {
-                return await this.empRepository.AddEmployeeDetail(employeeModel);
+                return await this.empRepository.AddEmployeeDetail(employeemodel);
             }
             catch (Exception ex)
             {

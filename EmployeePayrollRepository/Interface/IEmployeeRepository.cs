@@ -8,7 +8,7 @@ namespace EmployeePayrollRepository.Interface
 {
   public interface IEmployeeRepository
     {
-        Task<EmployeeModel> AddEmployeeDetail(EmployeeModel employeeModel);
+        Task<EmployeeModel> AddEmployeeDetail(EmployeeModel employeemodel);
         Task<EmployeeModel> EditEmployeeDetail(EmployeeModel employeeModel);
     }
 }

@@ -33,12 +33,12 @@ namespace EmployeePayrollRepository.Repository
             }
         }
 
-        public async Task<EmployeeModel>EditEmployeeDetail(EmployeeModel employeeModel)
+        public async Task<EmployeeModel> EditEmployeeDetail(EmployeeModel employeeModel)
         {
             try
             {
                 var EmployeeDetail = await this.context.Emp.Where(x => x.EmployeeId == employeeModel.EmployeeId).SingleOrDefaultAsync();
-                if(EmployeeDetail != null)
+                if (EmployeeDetail != null)
                 {
                     EmployeeDetail.NAME = employeeModel.NAME;
                     EmployeeDetail.PROFILE = employeeModel.PROFILE;
@@ -52,7 +52,7 @@ namespace EmployeePayrollRepository.Repository
                 }
                 return null;
             }
-            catch(ArgumentNullException ex)
+            catch (ArgumentNullException ex)
             {
                 throw new Exception(ex.Message);
             }
