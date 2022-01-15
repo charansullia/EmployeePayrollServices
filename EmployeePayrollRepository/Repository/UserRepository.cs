@@ -70,7 +70,7 @@ namespace EmployeePayrollRepository.Repository
                 var ValidEmail = await this.context.Users.Where(x => x.Email == logindata.Email).SingleOrDefaultAsync();
                 if (ValidEmail != null)
                 {
-                    var ValidPassword = await this.context.Users.Where(x => x.Password == EncodePassword(logindata.Password)).SingleOrDefaultAsync();
+                    var ValidPassword = await this.context.Users.Where(x => x.Email == logindata.Email && x.Password==EncodePassword(logindata.Password)).SingleOrDefaultAsync();
                     if (ValidPassword != null)
                     {
                         ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(this.configuration["Connections:Connection"]);

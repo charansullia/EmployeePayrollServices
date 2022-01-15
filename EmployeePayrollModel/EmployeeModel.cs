@@ -14,11 +14,11 @@ namespace EmployeePayrollModel
         [ForeignKey("RegisterModel")]
         public int UserId { get; set; }
         public virtual RegisterModel user { get; set; }
-        public string NAME { get; set; }
-        public string PROFILE { get; set; }
-        public string GENDER { get; set; }
-        public string DEPARTMENT { get; set; }
-        public int SALARY { get; set; }
-        public int STARTDATE { get; set; }
+        public string Name { get; set; }
+        public string Profile { get; set; }
+        public string Gender { get; set; }
+        public string Department { get; set; }
+        public int Salary { get; set; }
+        public int StartDate { get; set; }
     }
 }
