@@ -15,10 +15,12 @@ namespace EmployeePayrollService.Controller
     {
         private readonly IUserManager manager;
         private readonly IConfiguration configuration;
-        public UserController(IUserManager manager, IConfiguration configuration)
+        private readonly ILogger<UserController> logger;
+        public UserController(IUserManager manager, IConfiguration configuration, ILogger<UserController> logger)
         {
             this.manager = manager;
             this.configuration = configuration;
+            this.logger = logger;
         }
 
         [HttpPost]
@@ -27,18 +29,22 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
+                this.logger.LogInformation(register.FirstName + " " + register.LastName + " is trying to Register");
                 var result = await this.manager.Register(register);
                 if (result != null)
                 {
+                    this.logger.LogInformation(register.FirstName + " " + register.LastName + result);
                     return this.Ok(new { Status = true, message = "RegisterSuccessfull", Data = result });
                 }
                 else
                 {
+                    this.logger.LogWarning(register.FirstName + " " + register.LastName + result);
                     return this.BadRequest(new { Status = false, message = "RegistrationUnSuccessful" });
                 }
             }
             catch (Exception ex)
             {
+                this.logger.LogError(register.FirstName + " " + register.LastName );
                 return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
@@ -49,9 +55,11 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
+                this.logger.LogInformation(logindata.Email + " " + logindata.Password + "is trying to Login");
                 var result = await this.manager.Login(logindata);
                 if (result == true)
                 {
+                    this.logger.LogInformation(logindata.Email + " " + logindata.Password + result);
                     ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(this.configuration["Connections:Connection"]);
                     IDatabase database = connectionMultiplexer.GetDatabase();
                     string FirstName = database.StringGet("First Name");
@@ -71,12 +79,14 @@ namespace EmployeePayrollService.Controller
                 }
                 else
                 {
+                    this.logger.LogWarning(logindata.Email + " " + logindata.Password + result);
                     return this.BadRequest(new { Status = false, message = "Login UnSuccessfull" });
 
                 }
             }
             catch (Exception ex)
             {
+                this.logger.LogError(logindata.Email + " " + logindata.Password );
                 return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
@@ -87,18 +97,22 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
+                this.logger.LogInformation(reset.Email + " " + reset.Password + "is trying to ResetPassword");
                 var result = await this.manager.ResetPassword(reset);
                 if (result == true)
                 {
+                    this.logger.LogInformation(reset.Email + " " + reset.Password + result);
                     return this.Ok(new { Status = true, message = "Password Successfully Changed", Data = result });
                 }
                 else
                 {
+                    this.logger.LogWarning(reset.Email + " " + reset.Password + result);
                     return this.BadRequest(new { Status = false, message = "Password not changed" });
                 }
             }
             catch (Exception ex)
             {
+                this.logger.LogError(reset.Email + " " + reset.Password );
                 return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
@@ -109,19 +123,23 @@ namespace EmployeePayrollService.Controller
         {
             try
             {
+                this.logger.LogInformation(Email + " " + "is trying to ForgetPassword");
                 var result = await this.manager.ForgotPassword(Email);
                 if (result == true)
                 {
+                    this.logger.LogInformation(Email + " " + result);
                     return this.Ok(new { Status = true, message = " Password Link Send Sucessfully", Data = result });
                 }
                 else
                 {
+                    this.logger.LogWarning(Email + " " + result);
                     return this.BadRequest(new { Status = false, message = "Password Link send Unsuccessfully " });
                 }
 
             }
             catch (Exception ex)
             {
+                this.logger.LogError(Email);
                 return this.NotFound(new { Status = false, message = ex.Message });
             }
         }
