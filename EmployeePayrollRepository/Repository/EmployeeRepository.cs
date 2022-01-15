@@ -40,12 +40,12 @@ namespace EmployeePayrollRepository.Repository
                 var EmployeeDetail = await this.context.Emp.Where(x => x.EmployeeId == employeeModel.EmployeeId).SingleOrDefaultAsync();
                 if (EmployeeDetail != null)
                 {
-                    EmployeeDetail.NAME = employeeModel.NAME;
-                    EmployeeDetail.PROFILE = employeeModel.PROFILE;
-                    EmployeeDetail.GENDER = employeeModel.GENDER;
-                    EmployeeDetail.DEPARTMENT = employeeModel.DEPARTMENT;
-                    EmployeeDetail.SALARY = employeeModel.SALARY;
-                    EmployeeDetail.STARTDATE = employeeModel.STARTDATE;
+                    EmployeeDetail.Name = employeeModel.Name;
+                    EmployeeDetail.Profile = employeeModel.Profile;
+                    EmployeeDetail.Gender = employeeModel.Gender;
+                    EmployeeDetail.Department = employeeModel.Department;
+                    EmployeeDetail.Salary = employeeModel.Salary;
+                    EmployeeDetail.StartDate = employeeModel.StartDate;
                     this.context.Emp.Update(EmployeeDetail);
                     await this.context.SaveChangesAsync();
                     return employeeModel;
