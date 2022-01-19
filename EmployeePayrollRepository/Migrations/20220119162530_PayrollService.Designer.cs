@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeePayrollRepository.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20220119051621_PayrolService")]
-    partial class PayrolService
+    [Migration("20220119162530_PayrollService")]
+    partial class PayrollService
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,8 +50,6 @@ namespace EmployeePayrollRepository.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Emp");
                 });
 
@@ -79,15 +77,6 @@ namespace EmployeePayrollRepository.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("EmployeePayrollModel.EmployeeModel", b =>
-                {
-                    b.HasOne("EmployeePayrollModel.RegisterModel", "user")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

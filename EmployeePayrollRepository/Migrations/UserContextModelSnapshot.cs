@@ -48,8 +48,6 @@ namespace EmployeePayrollRepository.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Emp");
                 });
 
@@ -77,15 +75,6 @@ namespace EmployeePayrollRepository.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("EmployeePayrollModel.EmployeeModel", b =>
-                {
-                    b.HasOne("EmployeePayrollModel.RegisterModel", "user")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

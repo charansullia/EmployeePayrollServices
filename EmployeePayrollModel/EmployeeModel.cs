@@ -13,7 +13,6 @@ namespace EmployeePayrollModel
         public int EmployeeId { get; set; }
         [ForeignKey("RegisterModel")]
         public int UserId { get; set; }
-        public virtual RegisterModel user { get; set; }
         public string Name { get; set; }
         public string Profile { get; set; }
         public string Gender { get; set; }
