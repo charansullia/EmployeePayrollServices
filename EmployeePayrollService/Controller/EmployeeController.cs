@@ -1,5 +1,6 @@
 ﻿using EmployeePayrollManager.Interface;
 using EmployeePayrollModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace EmployeePayrollService.Controller
         {
             this.manager = manager;
         }
+
+        [Authorize]
 
         [HttpPost]
         [Route("api/addEmployee")]
