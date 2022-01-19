@@ -38,7 +38,6 @@ namespace EmployeePayrollService.Controller
             {
                 return this.NotFound(new { Status = false, ex.Message });
             }
-
         }
 
         [HttpPut]
