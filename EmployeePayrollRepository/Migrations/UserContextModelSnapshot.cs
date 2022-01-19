@@ -25,22 +25,22 @@ namespace EmployeePayrollRepository.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DEPARTMENT")
+                    b.Property<string>("Department")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GENDER")
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NAME")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PROFILE")
+                    b.Property<string>("Profile")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SALARY")
+                    b.Property<int>("Salary")
                         .HasColumnType("int");
 
-                    b.Property<int>("STARTDATE")
+                    b.Property<int>("StartDate")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")

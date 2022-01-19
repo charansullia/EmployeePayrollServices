@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeePayrollRepository.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20220108044719_PayrollService")]
-    partial class PayrollService
+    [Migration("20220119051621_PayrolService")]
+    partial class PayrolService
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,22 +27,22 @@ namespace EmployeePayrollRepository.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DEPARTMENT")
+                    b.Property<string>("Department")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GENDER")
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NAME")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PROFILE")
+                    b.Property<string>("Profile")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SALARY")
+                    b.Property<int>("Salary")
                         .HasColumnType("int");
 
-                    b.Property<int>("STARTDATE")
+                    b.Property<int>("StartDate")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")

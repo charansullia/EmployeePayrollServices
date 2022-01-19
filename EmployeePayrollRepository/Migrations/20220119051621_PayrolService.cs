@@ -2,7 +2,7 @@
 
 namespace EmployeePayrollRepository.Migrations
 {
-    public partial class PayrollService : Migration
+    public partial class PayrolService : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,12 +29,12 @@ namespace EmployeePayrollRepository.Migrations
                     EmployeeId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(nullable: false),
-                    NAME = table.Column<string>(nullable: true),
-                    PROFILE = table.Column<string>(nullable: true),
-                    GENDER = table.Column<string>(nullable: true),
-                    DEPARTMENT = table.Column<string>(nullable: true),
-                    SALARY = table.Column<int>(nullable: false),
-                    STARTDATE = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(nullable: true),
+                    Profile = table.Column<string>(nullable: true),
+                    Gender = table.Column<string>(nullable: true),
+                    Department = table.Column<string>(nullable: true),
+                    Salary = table.Column<int>(nullable: false),
+                    StartDate = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
