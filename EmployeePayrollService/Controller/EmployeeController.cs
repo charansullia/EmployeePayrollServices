@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EmployeePayrollService.Controller
 {
+   // [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeManager manager;
@@ -16,8 +17,6 @@ namespace EmployeePayrollService.Controller
         {
             this.manager = manager;
         }
-
-        [Authorize]
 
         [HttpPost]
         [Route("api/addEmployee")]
